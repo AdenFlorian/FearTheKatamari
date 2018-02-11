@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,14 +11,18 @@ public class GameMaster : MonoBehaviour {
 	public Transform SpawnTransform;
 	public GameObject GameOverUI;
 
+	public static event Action GameOver;
+	public static event Action GameStarted;
+	public static event Action GameRestarted;
+
 	bool hasStarted = false;
 
 	void Start() {
 		isGameOver = false;
 		hasStarted = true;
-		Player = GameObject.Instantiate(PlayerPrefab, SpawnTransform).GetComponent<Player>();
-		Spawner.I.Start();
+		Player = gameObject.InstantiateEx(PlayerPrefab, SpawnTransform).GetComponent<Player>();
 		GameOverUI.SetActive(false);
+		GameStarted?.Invoke();
 	}
 
 	void Update() {
@@ -29,12 +34,13 @@ public class GameMaster : MonoBehaviour {
 	void OnGameOver() {
 		Debug.Log("game over");
 		isGameOver = true;
-		Spawner.I.spawning = false;
 		GameOverUI.SetActive(true);
+		GameOver?.Invoke();
 	}
 
 	public void Again() {
 		Debug.Log("Again");
 		this.Start();
+		GameRestarted?.Invoke();
 	}
 }

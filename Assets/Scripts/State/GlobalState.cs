@@ -42,6 +42,7 @@ public class GlobalState : MonoBehaviour {
 	}
 }
 
+[Serializable]
 public struct State {
 	public KatamariState katamari;
 }

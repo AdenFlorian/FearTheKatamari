@@ -904,7 +904,6 @@ MonoBehaviour:
   minHeightPos: -3.38
   obstaclesPerSecond: 2.81
   obstacleSize: 0.2
-  spawning: 1
   ObstacleType: 1
   spritesForRandomSpriteSpawner:
   - {fileID: 21300000, guid: 217b3a1e383a5b74e8dbc294259d0dc1, type: 3}
@@ -8974,8 +8973,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2512df2a0000c14f8e7c172ce07112a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.5
-  size: 1
+  speed: 1
+  sizeModifier: 1.4
 --- !u!114 &863525897
 MonoBehaviour:
   m_ObjectHideFlags: 0

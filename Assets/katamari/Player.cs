@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour {
-	public Transform StuckStuffParent;
+	public Transform katamari;
 
 	[SerializeField]
 	float jumpForce = 1;
@@ -17,9 +17,9 @@ public class Player : MonoBehaviour {
 
 	public Vector2 CenterOfMass {
 		get {
-			if (StuckStuffParent == null) return Vector2.zero;
-			var position2D = new Vector2(StuckStuffParent.localPosition.x, StuckStuffParent.localPosition.y);
-			return StuckStuffParent.localToWorldMatrix.MultiplyPoint(position2D + VectorToCenterOfMass);
+			if (katamari == null) return Vector2.zero;
+			var position2D = new Vector2(katamari.localPosition.x, katamari.localPosition.y);
+			return katamari.localToWorldMatrix.MultiplyPoint(position2D + VectorToCenterOfMass);
 		}
 	}
 	Vector2 VectorToCenterOfMass = Vector2.zero;
@@ -33,6 +33,7 @@ public class Player : MonoBehaviour {
 
 	void Awake() {
 		rigidbody2D = GetComponent<Rigidbody2D>();
+		GlobalState.ResetKatamariSize();
 	}
 
 	void Start() {
@@ -68,8 +69,9 @@ public class Player : MonoBehaviour {
 	}
 
 	void OnCollisionEnter2D(Collision2D collision) {
-		if (collision.gameObject.GetComponent<Obstacle>() != null) {
-			OnCollisionEnterWithObstacle(collision);
+		var obstacle = collision.gameObject.GetComponent<Obstacle>();
+		if (obstacle != null) {
+			OnCollisionEnterWithObstacle(obstacle);
 		} else if (collision.gameObject.tag == "Ground") {
 			OnCollisionEnterWithGround();
 		}
@@ -87,10 +89,11 @@ public class Player : MonoBehaviour {
 		}
 	}
 
-	void OnCollisionEnterWithObstacle(Collision2D collision) {
-		GameObject.Destroy(collision.gameObject.GetComponent<Rigidbody2D>());
-		collision.transform.parent = StuckStuffParent;
-		UpdateCenterOfMass(collision.transform);
+	void OnCollisionEnterWithObstacle(Obstacle obstacle) {
+		GameObject.Destroy(obstacle.gameObject.GetComponent<Rigidbody2D>());
+		obstacle.transform.parent = katamari;
+		UpdateCenterOfMass(obstacle.transform);
+		ChangeSizeIfNeeded(obstacle);
 	}
 
 	void UpdateCenterOfMass(Transform newThing) {
@@ -112,5 +115,33 @@ public class Player : MonoBehaviour {
 
 	void OnCollisionExitWithGround() {
 		isGrounded = false;
+	}
+
+	void ChangeSizeIfNeeded(Obstacle obstacle) {
+		var greatestDistance = GetGreatestDistanceToExistingObstacles(obstacle);
+		if (greatestDistance > GlobalState.GetState().katamari.size) {
+			GlobalState.ChangeKatamariSize(greatestDistance);
+		}		
+	}
+
+	float GetGreatestDistanceToExistingObstacles(Obstacle obstacle) {
+		var greatestDistance = 0f;
+
+		for (int i = 0; i < katamari.childCount; i++) {
+			var child = katamari.GetChild(i);
+			if (child.tag != Tags.Obstacle) continue;
+			
+			var distance = GetDistance(obstacle.transform, child.transform);
+
+			if (distance > greatestDistance) {
+				greatestDistance = distance;
+			}
+		}
+
+		return greatestDistance;
+	}
+	
+	float GetDistance(Transform a, Transform b) {
+		return (a.position - b.position).magnitude;
 	}
 }

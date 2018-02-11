@@ -1,3 +1,6 @@
+using System;
+
+[Serializable]
  public struct KatamariState {
     public float size;
 

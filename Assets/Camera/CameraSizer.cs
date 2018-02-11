@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraSizer : MonoBehaviour {
 	public float speed = 0.5f;
-	public float size = 1f;
+	public float sizeModifier = 1f;
 
 	new Camera camera;
 	float targetSize;
@@ -12,7 +12,7 @@ public class CameraSizer : MonoBehaviour {
 	void Awake() {
 		camera = GetComponent<Camera>();
 		GlobalState.StateChanged += (newState) => {
-			targetSize = (GlobalState.GetState().katamari.size + 1) * size;
+			targetSize = (GlobalState.GetState().katamari.size + 1);
 		};
 	}
 
@@ -20,7 +20,7 @@ public class CameraSizer : MonoBehaviour {
 	}
 	
 	void Update() {
-		var difference = targetSize - camera.orthographicSize;
+		var difference = targetSize * sizeModifier - camera.orthographicSize;
 		camera.orthographicSize += difference * speed * Time.deltaTime;
 	}
 }
