@@ -45,7 +45,7 @@ public class Spawner : MonoBehaviour {
 
 	IEnumerator spawn() {
 		while (spawning) {
-			yield return new WaitForSeconds(1 / ((elapsedTime / 20) * obstaclesPerSecond + 1));
+			yield return new WaitForSeconds(1 / ((elapsedTime / 10) * obstaclesPerSecond + 1));
 
 			var go = getNextObstaclePrefab(ObstacleType);
 			go.transform.position = transform.position;
