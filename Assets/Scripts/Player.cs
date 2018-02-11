@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour {
+	public Transform StuckStuffParent;
+
 	public float jumpForce = 1;
 	public float moveForce = 1;
 	public float rotationForce = 1;
@@ -37,6 +39,14 @@ public class Player : MonoBehaviour {
 			rigidbody2D.angularVelocity = 10;
 		} else if 	(rigidbody2D.angularVelocity < -maxRotationSpeed) {
 			rigidbody2D.angularVelocity = -10;
+		}
+	}
+
+	void OnCollisionEnter2D(Collision2D collision) {
+		if (collision.gameObject.GetComponent<Obstacle>() != null) {
+			Debug.Log("collided with Player");
+			GameObject.Destroy(collision.gameObject.GetComponent<Rigidbody2D>());
+			collision.transform.parent = StuckStuffParent;
 		}
 	}
 }

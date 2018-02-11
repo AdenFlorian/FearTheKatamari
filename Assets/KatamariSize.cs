@@ -3,28 +3,40 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class KatamariSize : MonoBehaviour {
+	public Transform StuckStuffParent;
 
-	// Use this for initialization
+	static float size = 1f;
+
+	public static float GetSize() {
+		return size;
+	}
+
 	void Start () {
 	}
 	
-	// Update is called once per frame
 	void Update () {
-		Debug.Log("size: " + calculateSize());
-	}
-
-	float calculateSize() {
-		var greatestDistance = 0f;
-		for (int i = 0; i < transform.childCount; i++) {
-			var child = transform.GetChild(i);
-			if (getDistanceToOrigin(child) > greatestDistance) {
-				greatestDistance = getDistanceToOrigin(child);
-			}
-		}
-		return greatestDistance;
 	}
 	
-	float getDistanceToOrigin(Transform outerTransform) {
-		return (outerTransform.position - transform.position).magnitude;
+	float GetDistance(Transform a, Transform b) {
+		return (a.position - b.position).magnitude;
+	}
+
+	void OnCollisionEnter2D(Collision2D collision) {
+		var obstacle = collision.gameObject.GetComponent<Obstacle>();
+		if (obstacle != null) {
+			OnCollisionWithObstacle(obstacle);
+		}
+	}
+
+	void OnCollisionWithObstacle(Obstacle obstacle) {
+		for (int i = 0; i < StuckStuffParent.childCount; i++) {
+			var child = StuckStuffParent.GetChild(i);
+			
+			var distance = GetDistance(obstacle.transform, child.transform);
+
+			if (distance > size) {
+				size = distance;
+			}
+		}
 	}
 }
