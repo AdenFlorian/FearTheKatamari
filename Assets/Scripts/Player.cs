@@ -9,6 +9,16 @@ public class Player : MonoBehaviour {
 	public float moveForce = 1;
 	public float rotationForce = 1;
 	public float maxRotationSpeed = 10;
+
+	public Vector2 CenterOfMass {
+		get {
+			var position2D = new Vector2(StuckStuffParent.localPosition.x, StuckStuffParent.localPosition.y);
+			return StuckStuffParent.localToWorldMatrix.MultiplyPoint(position2D + VectorToCenterOfMass);
+		}
+	}
+	Vector2 VectorToCenterOfMass = Vector2.zero;
+	int countOfMassObjects = 1;
+	Vector2 sumOfObjectPositions = Vector2.zero;
 	
 	new Rigidbody2D rigidbody2D;
 
@@ -47,6 +57,14 @@ public class Player : MonoBehaviour {
 			Debug.Log("collided with Player");
 			GameObject.Destroy(collision.gameObject.GetComponent<Rigidbody2D>());
 			collision.transform.parent = StuckStuffParent;
+			UpdateCenterOfMass(collision.transform);
 		}
+	}
+
+	void UpdateCenterOfMass(Transform newThing) {
+		countOfMassObjects++;
+		var newPosition2D = new Vector2(newThing.localPosition.x, newThing.localPosition.y);
+		sumOfObjectPositions += newPosition2D;
+		VectorToCenterOfMass = sumOfObjectPositions / countOfMassObjects;
 	}
 }

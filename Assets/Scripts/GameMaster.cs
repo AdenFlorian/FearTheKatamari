@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameMaster : MonoBehaviour {
-	GameObject Player;
+	public GameObject Player;
 	public GameObject PlayerPrefab;
 	public Transform SpawnTransform;
 	bool isGameOver = false;
@@ -14,11 +14,11 @@ public class GameMaster : MonoBehaviour {
 
 	void Awake() {
 		I = this;
+		Player = GameObject.Instantiate(PlayerPrefab, SpawnTransform.position, SpawnTransform.rotation);
 	}
 
 	// Use this for initialization
 	void Start() {
-		Player = GameObject.Instantiate(PlayerPrefab, SpawnTransform.position, SpawnTransform.rotation);
 		isGameOver = false;
 		Spawner.I.Start();
 		GameOverUI.SetActive(false);
