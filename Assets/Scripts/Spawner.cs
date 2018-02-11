@@ -2,16 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ObstacleType
-{
+public enum ObstacleType {
 	Sphere,
 	RandomSprites
 }
 
 public class Spawner : MonoBehaviour {
+	public static Spawner I;
+
 	public GameObject obstaclePrefab;
+	public Transform spawnTransform;
 	public float minHeightPos = -1;
-	public float maxHeightPos = 1;
+	float maxSpawnHeight = 1;
 	public float obstaclesPerSecond = 2;
 	public float obstacleSize = 1;
 	public bool spawning = true;
@@ -22,14 +24,17 @@ public class Spawner : MonoBehaviour {
 	GameObject obstaclesParent;
 	float startTime;
 	float elapsedTime = 1;
-
-	public static Spawner I;
+	public float startingObstaclesPerSecond = 10;
+	public float minimumObstaclesPerSecond = 1;
+	float currentObstaclesPerSecond;
 
 	void Awake() {
 		I = this;
+		GlobalState.StateChanged += (newState) => {
+			maxSpawnHeight = GlobalState.GetState().katamari.size * 2;
+		};
 	}
 
-	// Use this for initialization
 	public void Start() {
 		startTime = Time.time;
 		obstaclesParent = new GameObject();
@@ -38,19 +43,22 @@ public class Spawner : MonoBehaviour {
 		StartCoroutine(spawn());
 	}
 
-	// Update is called once per frame
 	void Update() {
 		elapsedTime = Time.time - startTime + 1;
+
+		if (GameMaster.Player == null) return;
+
+		spawnTransform.position = GameMaster.Player.transform.position + Vector3.right * GlobalState.GetState().katamari.size + Vector3.right * 10;
 	}
 
 	IEnumerator spawn() {
 		while (spawning) {
-			yield return new WaitForSeconds(1 / ((elapsedTime / 10) * obstaclesPerSecond + 1));
+			currentObstaclesPerSecond = startingObstaclesPerSecond / elapsedTime + minimumObstaclesPerSecond;
+			yield return new WaitForSeconds(1 / currentObstaclesPerSecond);
 
 			var go = getNextObstaclePrefab(ObstacleType);
-			go.transform.position = transform.position;
+			go.transform.position = spawnTransform.position + Vector3.up * Random.Range(minHeightPos, maxSpawnHeight);
 			go.transform.rotation = Quaternion.identity;
-			go.transform.position += new Vector3(0, Random.Range(minHeightPos, maxHeightPos), 0);
 			go.transform.parent = obstaclesParent.transform;
 			go.transform.localScale *= obstacleSize * Random.Range(0.1f, Random.Range(elapsedTime / 10, elapsedTime / 5));
 

@@ -3,29 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameMaster : MonoBehaviour {
-	public GameObject Player;
+	public static Player Player;
+	public static bool isGameOver {get; private set;}
+
 	public GameObject PlayerPrefab;
 	public Transform SpawnTransform;
-	bool isGameOver = false;
 	public GameObject GameOverUI;
+
 	bool hasStarted = false;
 
-	public static GameMaster I;
-
-	void Awake() {
-		I = this;
-		Player = GameObject.Instantiate(PlayerPrefab, SpawnTransform.position, SpawnTransform.rotation);
-	}
-
-	// Use this for initialization
 	void Start() {
 		isGameOver = false;
+		hasStarted = true;
+		Player = GameObject.Instantiate(PlayerPrefab, SpawnTransform).GetComponent<Player>();
 		Spawner.I.Start();
 		GameOverUI.SetActive(false);
-		hasStarted = true;
 	}
 
-	// Update is called once per frame
 	void Update() {
 		if (hasStarted && Player == null && isGameOver == false) {
 			OnGameOver();

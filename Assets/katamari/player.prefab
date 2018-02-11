@@ -21,9 +21,8 @@ GameObject:
   - component: {fileID: 4198010597665716}
   - component: {fileID: 114621463489235616}
   - component: {fileID: 50540525939829824}
-  - component: {fileID: 114929238084532842}
   m_Layer: 0
-  m_Name: mushBall
+  m_Name: player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -37,8 +36,9 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4421619318653252}
+  - component: {fileID: 114434511046433140}
   m_Layer: 0
-  m_Name: StuckStuff
+  m_Name: katamari
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -375,6 +375,17 @@ PolygonCollider2D:
       - {x: 0.16393201, y: -0.108174786}
       - {x: 0.1181108, y: -0.06951383}
       - {x: 0.060509443, y: -0.04677263}
+--- !u!114 &114434511046433140
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1541756304088188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f12c8d398ad17f4e8c578b397448bad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114621463489235616
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -391,18 +402,6 @@ MonoBehaviour:
   moveForce: 31.64
   rotationForce: 159.89
   maxRotationSpeed: 360
---- !u!114 &114929238084532842
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1325346181734076}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f12c8d398ad17f4e8c578b397448bad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  StuckStuffParent: {fileID: 4421619318653252}
 --- !u!212 &212270896311514018
 SpriteRenderer:
   m_ObjectHideFlags: 1

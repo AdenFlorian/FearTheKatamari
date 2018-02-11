@@ -1,17 +1,23 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour {
 	public Transform StuckStuffParent;
 
-	public float jumpForce = 1;
-	public float moveForce = 1;
-	public float rotationForce = 1;
-	public float maxRotationSpeed = 10;
+	[SerializeField]
+	float jumpForce = 1;
+	[SerializeField]
+	float moveForce = 1;
+	[SerializeField]
+	float rotationForce = 1;
+	[SerializeField]
+	float maxRotationSpeed = 10;
 
 	public Vector2 CenterOfMass {
 		get {
+			if (StuckStuffParent == null) return Vector2.zero;
 			var position2D = new Vector2(StuckStuffParent.localPosition.x, StuckStuffParent.localPosition.y);
 			return StuckStuffParent.localToWorldMatrix.MultiplyPoint(position2D + VectorToCenterOfMass);
 		}
@@ -21,6 +27,9 @@ public class Player : MonoBehaviour {
 	Vector2 sumOfObjectPositions = Vector2.zero;
 	
 	new Rigidbody2D rigidbody2D;
+	bool isGrounded;
+	bool canJump = true;
+	float lastJumpTime;
 
 	void Awake() {
 		rigidbody2D = GetComponent<Rigidbody2D>();
@@ -31,9 +40,15 @@ public class Player : MonoBehaviour {
 	}
 
 	void Update() {
-		if (Input.GetKeyDown(KeyCode.Space)) {
-			rigidbody2D.AddForce(new Vector3(0, jumpForce, 0), ForceMode2D.Impulse);
+		if (Input.GetKeyDown(KeyCode.Space) && canJump) {
+			Jump();
 		}
+	}
+
+	void Jump() {
+		canJump = false;
+		lastJumpTime = Time.time;
+		rigidbody2D.AddForce(new Vector3(0, jumpForce, 0), ForceMode2D.Impulse);
 	}
 
 	void FixedUpdate() {
@@ -54,11 +69,28 @@ public class Player : MonoBehaviour {
 
 	void OnCollisionEnter2D(Collision2D collision) {
 		if (collision.gameObject.GetComponent<Obstacle>() != null) {
-			Debug.Log("collided with Player");
-			GameObject.Destroy(collision.gameObject.GetComponent<Rigidbody2D>());
-			collision.transform.parent = StuckStuffParent;
-			UpdateCenterOfMass(collision.transform);
+			OnCollisionEnterWithObstacle(collision);
+		} else if (collision.gameObject.tag == "Ground") {
+			OnCollisionEnterWithGround();
 		}
+	}
+
+	void OnCollisionStay2D(Collision2D collision) {
+		if (collision.gameObject.tag == "Ground") {
+			OnCollisionStayWithGround();
+		}
+	}
+
+	void OnCollisionExit2D(Collision2D collision) {
+		if (collision.gameObject.tag == "Ground") {
+			OnCollisionExitWithGround();
+		}
+	}
+
+	void OnCollisionEnterWithObstacle(Collision2D collision) {
+		GameObject.Destroy(collision.gameObject.GetComponent<Rigidbody2D>());
+		collision.transform.parent = StuckStuffParent;
+		UpdateCenterOfMass(collision.transform);
 	}
 
 	void UpdateCenterOfMass(Transform newThing) {
@@ -66,5 +98,19 @@ public class Player : MonoBehaviour {
 		var newPosition2D = new Vector2(newThing.localPosition.x, newThing.localPosition.y);
 		sumOfObjectPositions += newPosition2D;
 		VectorToCenterOfMass = sumOfObjectPositions / countOfMassObjects;
+	}
+
+	void OnCollisionEnterWithGround() {
+		isGrounded = true;
+	}
+
+	void OnCollisionStayWithGround() {
+		if (canJump == false && Time.time - lastJumpTime > 1) {
+			canJump = true;
+		}
+	}
+
+	void OnCollisionExitWithGround() {
+		isGrounded = false;
 	}
 }

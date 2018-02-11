@@ -5296,6 +5296,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea89d795d9d2c3e4cb311e6a7dfcbeb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  StuckStuffParent: {fileID: 0}
   jumpForce: 49.95
   moveForce: 31.64
   rotationForce: 159.89
@@ -5311,3 +5312,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f12c8d398ad17f4e8c578b397448bad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  StuckStuffParent: {fileID: 0}
