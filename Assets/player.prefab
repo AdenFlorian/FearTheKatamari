@@ -181,8 +181,9 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4599089803694162}
-  - component: {fileID: 114464285863489452}
   - component: {fileID: 50832550194936840}
+  - component: {fileID: 114464285863489452}
+  - component: {fileID: 114912661114038060}
   m_Layer: 0
   m_Name: player
   m_TagString: Player
@@ -5299,3 +5300,14 @@ MonoBehaviour:
   moveForce: 31.64
   rotationForce: 159.89
   maxRotationSpeed: 360
+--- !u!114 &114912661114038060
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1085480102974122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f12c8d398ad17f4e8c578b397448bad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
