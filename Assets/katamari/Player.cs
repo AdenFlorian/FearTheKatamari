@@ -27,7 +27,6 @@ public class Player : MonoBehaviour {
 	Vector2 sumOfObjectPositions = Vector2.zero;
 	
 	new Rigidbody2D rigidbody2D;
-	bool isGrounded;
 	bool canJump = true;
 	float lastJumpTime;
 
@@ -72,20 +71,12 @@ public class Player : MonoBehaviour {
 		var obstacle = collision.gameObject.GetComponent<Obstacle>();
 		if (obstacle != null) {
 			OnCollisionEnterWithObstacle(obstacle);
-		} else if (collision.gameObject.tag == "Ground") {
-			OnCollisionEnterWithGround();
 		}
 	}
 
 	void OnCollisionStay2D(Collision2D collision) {
 		if (collision.gameObject.tag == "Ground") {
 			OnCollisionStayWithGround();
-		}
-	}
-
-	void OnCollisionExit2D(Collision2D collision) {
-		if (collision.gameObject.tag == "Ground") {
-			OnCollisionExitWithGround();
 		}
 	}
 
@@ -103,18 +94,10 @@ public class Player : MonoBehaviour {
 		VectorToCenterOfMass = sumOfObjectPositions / countOfMassObjects;
 	}
 
-	void OnCollisionEnterWithGround() {
-		isGrounded = true;
-	}
-
 	void OnCollisionStayWithGround() {
 		if (canJump == false && Time.time - lastJumpTime > 1) {
 			canJump = true;
 		}
-	}
-
-	void OnCollisionExitWithGround() {
-		isGrounded = false;
 	}
 
 	void ChangeSizeIfNeeded(Obstacle obstacle) {
