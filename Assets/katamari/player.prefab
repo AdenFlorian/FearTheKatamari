@@ -419,6 +419,8 @@ MonoBehaviour:
   moveForce: 31.64
   rotationForce: 159.89
   maxRotationSpeed: 360
+  normalGravity: 2
+  jumpGravity: 1
 --- !u!212 &212270896311514018
 SpriteRenderer:
   m_ObjectHideFlags: 1

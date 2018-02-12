@@ -20,10 +20,13 @@ public class Player : MonoBehaviour {
 	new Rigidbody2D rigidbody2D;
 	bool canJump = true;
 	float lastJumpTime;
+	public float normalGravity = 1f;
+	public float jumpGravity = 0.5f;
 
 	void Awake() {
 		rigidbody2D = GetComponent<Rigidbody2D>();
 		GlobalState.ResetKatamariSize();
+		rigidbody2D.gravityScale = normalGravity;
 	}
 
 	void Start() {
@@ -31,15 +34,22 @@ public class Player : MonoBehaviour {
 	}
 
 	void Update() {
-		if (Input.GetKeyDown(KeyCode.Space) && canJump) {
-			Jump();
+		if (Input.GetKey(KeyCode.Space)) {
+			if (canJump) {
+				Jump();
+			}
+			rigidbody2D.gravityScale += (normalGravity - rigidbody2D.gravityScale) * Time.deltaTime;
+		}
+		if (Input.GetKeyUp(KeyCode.Space)) {
+			rigidbody2D.gravityScale = normalGravity;
 		}
 	}
 
 	void Jump() {
 		canJump = false;
 		lastJumpTime = Time.time;
-		rigidbody2D.AddForce(new Vector3(0, jumpForce, 0), ForceMode2D.Impulse);
+		rigidbody2D.AddForce(new Vector3(0, Mathf.Max(0, jumpForce - rigidbody2D.velocity.y), 0), ForceMode2D.Impulse);
+		rigidbody2D.gravityScale = jumpGravity;
 	}
 
 	void FixedUpdate() {
@@ -78,7 +88,7 @@ public class Player : MonoBehaviour {
 	}
 
 	void OnCollisionStayWithGround() {
-		if (canJump == false && Time.time - lastJumpTime > 1) {
+		if (canJump == false && Time.time - lastJumpTime > 0.05f) {
 			canJump = true;
 		}
 	}

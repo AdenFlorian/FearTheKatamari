@@ -2,8 +2,8 @@
 [x] give obstacles random torque
 [x] fix max angular velocity on player
 [x] do torque at center of mass (untiy already does this)
-[ ] better jump
-[ ] destroy obstacles that go too far left
+[x] better jump
+[x] destroy obstacles that go too far left
 [ ] Q E
 [ ] use spring joints to connect obstacles
 [ ] break apart katamari on death
