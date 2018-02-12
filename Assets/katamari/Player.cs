@@ -60,10 +60,10 @@ public class Player : MonoBehaviour {
 			rigidbody2D.AddForce(new Vector3(-moveForce, 0, 0), ForceMode2D.Force);
 			rigidbody2D.AddTorque(rotationForce);
 		}
-		if 	(rigidbody2D.angularVelocity > maxRotationSpeed) {
-			rigidbody2D.angularVelocity = 10;
+		if (rigidbody2D.angularVelocity > maxRotationSpeed) {
+			rigidbody2D.angularVelocity = maxRotationSpeed;
 		} else if 	(rigidbody2D.angularVelocity < -maxRotationSpeed) {
-			rigidbody2D.angularVelocity = -10;
+			rigidbody2D.angularVelocity = -maxRotationSpeed;
 		}
 	}
 
