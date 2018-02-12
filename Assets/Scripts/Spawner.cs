@@ -1,21 +1,22 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public enum ObstacleType {
-	Sphere,
+	ObstaclePrefab,
 	RandomSprites
 }
 
 public class Spawner : MonoBehaviour {
-	public GameObject obstaclePrefab;
 	public Transform spawnTransform;
 	public float minHeightPos = -1;
 	float maxSpawnHeight = 1;
 	public float obstaclesPerSecond = 2;
 	public float obstacleSize = 1;
-	public ObstacleType ObstacleType;
 	public Sprite[] spritesForRandomSpriteSpawner;
+	public GameObject[] obstaclePrefabs;
 	public float startForce;
 
 	GameObject obstaclesParent;
@@ -33,13 +34,13 @@ public class Spawner : MonoBehaviour {
 			GameObject.Destroy(obstaclesParent);
 			Start();
 		};
+		StartCoroutine(SpawnLoop());
 	}
 
 	public void Start() {
 		startTime = Time.time;
 		obstaclesParent = new GameObject();
 		obstaclesParent.name = "obstaclesParent";
-		StartCoroutine(SpawnLoop());
 	}
 
 	void Update() {
@@ -55,11 +56,11 @@ public class Spawner : MonoBehaviour {
 			currentObstaclesPerSecond = startingObstaclesPerSecond / elapsedTime + minimumObstaclesPerSecond;
 			yield return new WaitForSeconds(1 / currentObstaclesPerSecond);
 
-			var go = GetNextObstaclePrefab(ObstacleType);
-			go.transform.position = spawnTransform.position + Vector3.up * Random.Range(minHeightPos, maxSpawnHeight);
+			var go = GetNextObstaclePrefab();
+			go.transform.position = spawnTransform.position + Vector3.up * UnityEngine.Random.Range(minHeightPos, maxSpawnHeight);
 			go.transform.rotation = Quaternion.identity;
 			go.transform.parent = obstaclesParent.transform;
-			go.transform.localScale *= obstacleSize * Random.Range(0.1f, Random.Range(elapsedTime / 10, elapsedTime / 5));
+			go.transform.localScale *= obstacleSize * UnityEngine.Random.Range(0.1f, UnityEngine.Random.Range(elapsedTime / 10, elapsedTime / 5));
 
 			go.AddComponent<Obstacle>();
 			go.tag = Tags.Obstacle;
@@ -71,24 +72,25 @@ public class Spawner : MonoBehaviour {
 	}
 
 	void LaunchObstacle(Rigidbody2D rigidbody2D) {
-		rigidbody2D.velocity = new Vector3(Random.Range(startForce, startForce * 1.5f), 0, 0);
+		rigidbody2D.velocity = new Vector3(UnityEngine.Random.Range(startForce, startForce * 1.5f), 0, 0);
 	}
 
-	GameObject GetNextObstaclePrefab(ObstacleType ObstacleType) {
-		switch (ObstacleType)
-		{
-			case ObstacleType.Sphere: return GetSphereObstacle();
+	GameObject GetNextObstaclePrefab() {
+		var x = UnityEngine.Random.Range(0, Enum.GetNames(typeof(ObstacleType)).Length);
+		switch ((ObstacleType)Enum.Parse(typeof(ObstacleType), Enum.GetNames(typeof(ObstacleType))[x])) {
+			case ObstacleType.ObstaclePrefab: return GetRandomObstaclePrefab();
 			case ObstacleType.RandomSprites: return GetRandomSpriteObstacle();
-			default: return obstaclePrefab;
+			default: return GetRandomObstaclePrefab();
 		}
 	}
 
-	GameObject GetSphereObstacle() {
-		return GameObject.Instantiate(obstaclePrefab);
+	GameObject GetRandomObstaclePrefab() {
+		var randomPrefab = obstaclePrefabs[UnityEngine.Random.Range(0, obstaclePrefabs.Length)];
+		return GameObject.Instantiate(randomPrefab);
 	}
 
 	GameObject GetRandomSpriteObstacle() {
-		var randomSprite = spritesForRandomSpriteSpawner[Random.Range(0, spritesForRandomSpriteSpawner.Length)];
+		var randomSprite = spritesForRandomSpriteSpawner[UnityEngine.Random.Range(0, spritesForRandomSpriteSpawner.Length)];
 		var spriteGo = new GameObject("spriteGO");
 		spriteGo.AddComponent<SpriteRenderer>()
 			.sprite = randomSprite;
