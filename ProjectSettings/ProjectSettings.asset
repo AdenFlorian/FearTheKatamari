@@ -639,7 +639,7 @@ PlayerSettings:
   cloudServicesEnabled:
     UNet: 1
   facebookSdkVersion: 7.9.4
-  apiCompatibilityLevel: 2
+  apiCompatibilityLevel: 3
   cloudProjectId: 3779f94e-d93f-43e7-9ede-afe0fd5841e7
   projectName: EndlessKatamari
   organizationId: adenflorian

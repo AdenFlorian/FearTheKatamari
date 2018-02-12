@@ -1427,6 +1427,9 @@ MonoBehaviour:
   obstaclePrefabs:
   - {fileID: 1358857605607592, guid: 8ca3c67fef2146f48847c4e8ef8bb0ff, type: 2}
   startForce: -3.8
+  chanceOfRandomTorque: 50
+  minRandomTorque: -500
+  maxRandomTorque: 500
   startingObstaclesPerSecond: 10
   minimumObstaclesPerSecond: 1
 --- !u!4 &100894546

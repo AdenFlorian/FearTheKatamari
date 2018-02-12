@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityRandom = UnityEngine.Random;
 
 public enum ObstacleType {
 	ObstaclePrefab,
@@ -17,6 +18,10 @@ public class Spawner : MonoBehaviour {
 	public Sprite[] spritesForRandomSpriteSpawner;
 	public GameObject[] obstaclePrefabs;
 	public float startForce;
+	[Range(0, 100)]
+	public int chanceOfRandomTorque = 50;
+	public float minRandomTorque = -1000f;
+	public float maxRandomTorque = 1000f;
 
 	GameObject obstaclesParent;
 	float startTime;
@@ -56,10 +61,10 @@ public class Spawner : MonoBehaviour {
 			yield return new WaitForSeconds(1 / currentObstaclesPerSecond);
 
 			var go = GetNextObstaclePrefab();
-			go.transform.position = spawnTransform.position + Vector3.up * UnityEngine.Random.Range(minHeightPos, maxSpawnHeight);
+			go.transform.position = spawnTransform.position + Vector3.up * UnityRandom.Range(minHeightPos, maxSpawnHeight);
 			go.transform.rotation = Quaternion.identity;
 			go.transform.parent = obstaclesParent.transform;
-			go.transform.localScale *= obstacleSize * UnityEngine.Random.Range(0.1f, UnityEngine.Random.Range(elapsedTime / 10, elapsedTime / 5));
+			go.transform.localScale *= obstacleSize * UnityRandom.Range(0.1f, UnityRandom.Range(elapsedTime / 10, elapsedTime / 5));
 
 			go.AddComponent<Obstacle>();
 			go.tag = Tags.Obstacle;
@@ -71,11 +76,14 @@ public class Spawner : MonoBehaviour {
 	}
 
 	void LaunchObstacle(Rigidbody2D rigidbody2D) {
-		rigidbody2D.velocity = new Vector3(UnityEngine.Random.Range(startForce, startForce * 1.5f), 0, 0);
+		rigidbody2D.velocity = new Vector3(UnityRandom.Range(startForce, startForce * 1.5f), 0, 0);
+		if (UnityRandom.Range(0, 100) < chanceOfRandomTorque) {
+			rigidbody2D.angularVelocity = UnityRandom.Range(minRandomTorque, maxRandomTorque);
+		}
 	}
 
 	GameObject GetNextObstaclePrefab() {
-		var x = UnityEngine.Random.Range(0, Enum.GetNames(typeof(ObstacleType)).Length);
+		var x = UnityRandom.Range(0, Enum.GetNames(typeof(ObstacleType)).Length);
 		switch ((ObstacleType)Enum.Parse(typeof(ObstacleType), Enum.GetNames(typeof(ObstacleType))[x])) {
 			case ObstacleType.ObstaclePrefab: return GetRandomObstaclePrefab();
 			case ObstacleType.RandomSprites: return GetRandomSpriteObstacle();
@@ -84,12 +92,12 @@ public class Spawner : MonoBehaviour {
 	}
 
 	GameObject GetRandomObstaclePrefab() {
-		var randomPrefab = obstaclePrefabs[UnityEngine.Random.Range(0, obstaclePrefabs.Length)];
+		var randomPrefab = obstaclePrefabs[UnityRandom.Range(0, obstaclePrefabs.Length)];
 		return GameObject.Instantiate(randomPrefab);
 	}
 
 	GameObject GetRandomSpriteObstacle() {
-		var randomSprite = spritesForRandomSpriteSpawner[UnityEngine.Random.Range(0, spritesForRandomSpriteSpawner.Length)];
+		var randomSprite = spritesForRandomSpriteSpawner[UnityRandom.Range(0, spritesForRandomSpriteSpawner.Length)];
 		var spriteGo = new GameObject("spriteGO");
 		spriteGo.AddComponent<SpriteRenderer>()
 			.sprite = randomSprite;
