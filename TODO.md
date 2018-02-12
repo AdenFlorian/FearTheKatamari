@@ -5,6 +5,7 @@
 [x] better jump
 [x] destroy obstacles that go too far left
 [x] Q E
+[ ] make obstacle size based on katamari size
 [ ] use spring joints to connect obstacles
 [ ] break apart katamari on death
 
