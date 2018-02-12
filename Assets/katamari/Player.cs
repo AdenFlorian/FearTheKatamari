@@ -15,16 +15,7 @@ public class Player : MonoBehaviour {
 	[SerializeField]
 	float maxRotationSpeed = 10;
 
-	public Vector2 CenterOfMass {
-		get {
-			if (katamari == null) return Vector2.zero;
-			var position2D = new Vector2(katamari.localPosition.x, katamari.localPosition.y);
-			return katamari.localToWorldMatrix.MultiplyPoint(position2D + VectorToCenterOfMass);
-		}
-	}
-	Vector2 VectorToCenterOfMass = Vector2.zero;
-	int countOfMassObjects = 1;
-	Vector2 sumOfObjectPositions = Vector2.zero;
+	public Vector2 CenterOfMass => rigidbody2D.worldCenterOfMass;
 	
 	new Rigidbody2D rigidbody2D;
 	bool canJump = true;
@@ -83,15 +74,7 @@ public class Player : MonoBehaviour {
 	void OnCollisionEnterWithObstacle(Obstacle obstacle) {
 		GameObject.Destroy(obstacle.gameObject.GetComponent<Rigidbody2D>());
 		obstacle.transform.parent = katamari;
-		UpdateCenterOfMass(obstacle.transform);
 		ChangeSizeIfNeeded(obstacle);
-	}
-
-	void UpdateCenterOfMass(Transform newThing) {
-		countOfMassObjects++;
-		var newPosition2D = new Vector2(newThing.localPosition.x, newThing.localPosition.y);
-		sumOfObjectPositions += newPosition2D;
-		VectorToCenterOfMass = sumOfObjectPositions / countOfMassObjects;
 	}
 
 	void OnCollisionStayWithGround() {
