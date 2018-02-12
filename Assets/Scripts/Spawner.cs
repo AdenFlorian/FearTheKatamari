@@ -84,6 +84,11 @@ public class Spawner : MonoBehaviour {
 
 	GameObject GetNextObstaclePrefab() {
 		var x = UnityRandom.Range(0, Enum.GetNames(typeof(ObstacleType)).Length);
+		if (UnityRandom.Range(0, 100) > 90) {
+			x = 0;
+		} else {
+			x = 1;
+		}
 		switch ((ObstacleType)Enum.Parse(typeof(ObstacleType), Enum.GetNames(typeof(ObstacleType))[x])) {
 			case ObstacleType.ObstaclePrefab: return GetRandomObstaclePrefab();
 			case ObstacleType.RandomSprites: return GetRandomSpriteObstacle();
