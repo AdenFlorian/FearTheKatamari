@@ -53,13 +53,17 @@ public class Player : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
-		if (Input.GetKey(KeyCode.D)) {
-			rigidbody2D.AddForce(new Vector3(moveForce, 0, 0), ForceMode2D.Force);
+		if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.E)) {
 			rigidbody2D.AddTorque(-rotationForce);
+			if (Input.GetKey(KeyCode.D)) {
+				rigidbody2D.AddForce(new Vector3(moveForce, 0, 0), ForceMode2D.Force);
+			}
 		}
-		if (Input.GetKey(KeyCode.A)) {
-			rigidbody2D.AddForce(new Vector3(-moveForce, 0, 0), ForceMode2D.Force);
+		if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.Q)) {
 			rigidbody2D.AddTorque(rotationForce);
+			if (Input.GetKey(KeyCode.A)) {
+				rigidbody2D.AddForce(new Vector3(-moveForce, 0, 0), ForceMode2D.Force);
+			}
 		}
 		if (rigidbody2D.angularVelocity > maxRotationSpeed) {
 			rigidbody2D.angularVelocity = maxRotationSpeed;

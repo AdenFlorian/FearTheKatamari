@@ -4,7 +4,7 @@
 [x] do torque at center of mass (untiy already does this)
 [x] better jump
 [x] destroy obstacles that go too far left
-[ ] Q E
+[x] Q E
 [ ] use spring joints to connect obstacles
 [ ] break apart katamari on death
 
