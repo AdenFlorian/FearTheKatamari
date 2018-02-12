@@ -38,6 +38,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4316282775373040}
   - component: {fileID: 50243891297363068}
+  - component: {fileID: 114692664535736258}
   m_Layer: 0
   m_Name: dogecoin
   m_TagString: Untagged
@@ -178,6 +179,17 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!114 &114692664535736258
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1336285751487520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f06c2326c902be14a8ddabd5804e9625, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!212 &212482296720807488
 SpriteRenderer:
   m_ObjectHideFlags: 1
